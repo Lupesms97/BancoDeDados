@@ -9,29 +9,29 @@ class Funcionalidades():
         self.conn = sqlite3.connect(arquivo)
         self.cursor = self.conn.cursor()
 
-    def inserir(self, nome, cpf):
-        consulta = 'INSERT OR IGNORE INTO moleza (nome, cpf) VALUES (?, ?)'
+    def inserir(self, nome, cpf, valorComprado, dataCompra):
+        consulta = 'INSERT OR IGNORE INTO bancoDeDadosClientes (nome, cpf) VALUES (?, ?)'
         self.cursor.execute(consulta, (nome, cpf))
         self.conn.commit()
 
     def editar(self, nome, cpf, id):
-        consulta = 'UPDATE OR IGNORE moleza SET nome=?, cpf=? WHERE id=?'
+        consulta = 'UPDATE OR IGNORE bancoDeDadosClientes SET nome=?, cpf=? WHERE id=?'
         self.cursor.execute(consulta, (nome, cpf, id))
         self.conn.commit()
 
     def excluir(self, id):
-        consulta = 'DELETE FROM moleza WHERE id=?'
+        consulta = 'DELETE FROM bancoDeDadosClientes WHERE id=?'
         self.cursor.execute(consulta, (id,))
         self.conn.commit()
 
     def listar(self):
-        self.cursor.execute('SELECT * FROM moleza')
+        self.cursor.execute('SELECT * FROM bancoDeDadosClientes')
 
         for linha in self.cursor.fetchall():
             print(linha)
 
     def buscar(self, valor):
-        consulta = 'SELECT * FROM moleza WHERE nome LIKE ?'
+        consulta = 'SELECT * FROM bancoDeDadosClientes WHERE nome LIKE ?'
         self.cursor.execute(consulta, (f'%{valor}%', ))
 
         for linha in self.cursor.fetchall():
@@ -44,7 +44,7 @@ class Funcionalidades():
 
 
 if __name__ == '__main__':
-    agenda = Funcionalidades('moleza.sqlite3')
+    agenda = Funcionalidades('bancoDeDadosClientes.sqlite3')
 
     encerrar = False
     while not encerrar:
