@@ -1,6 +1,7 @@
 import sqlite3
 from time import sleep
 from tkinter import *
+from datetime import *
 
 
 class Funcionalidades():
@@ -9,14 +10,14 @@ class Funcionalidades():
         self.conn = sqlite3.connect(arquivo)
         self.cursor = self.conn.cursor()
 
-    def inserir(self, nome, cpf, valorComprado, dataCompra):
-        consulta = 'INSERT OR IGNORE INTO bancoDeDadosClientes (nome, cpf) VALUES (?, ?)'
-        self.cursor.execute(consulta, (nome, cpf))
+    def inserir(self, nome, telefone, valorComprado, dataCompra):
+        consulta = 'INSERT OR IGNORE INTO bancoDeDadosClientes (nome, telefone, valorCompra, data) VALUES (?, ?, ?, ?)'
+        self.cursor.execute(consulta, (nome, telefone, valorComprado, dataCompra))
         self.conn.commit()
 
-    def editar(self, nome, cpf, id):
-        consulta = 'UPDATE OR IGNORE bancoDeDadosClientes SET nome=?, cpf=? WHERE id=?'
-        self.cursor.execute(consulta, (nome, cpf, id))
+    def editar(self, nome, telefone, id):
+        consulta = 'UPDATE OR IGNORE bancoDeDadosClientes SET nome=?, telefone=? WHERE id=?'
+        self.cursor.execute(consulta, (nome, telefone, id))
         self.conn.commit()
 
     def excluir(self, id):
@@ -42,6 +43,13 @@ class Funcionalidades():
         self.cursor.close()
         self.conn.close()
 
+def botoes():
+    botao = Funcionalidades
+    inserir = botao.inserir()
+    excluir = botao.excluir()
+    buscar = botao.buscar()
+    listar = botao.listar()
+    editar = botao.editar()
 
 if __name__ == '__main__':
     agenda = Funcionalidades('bancoDeDadosClientes.sqlite3')
@@ -66,14 +74,18 @@ if __name__ == '__main__':
         if choice == 1:
             while not encerrar1:
                 nome = str(input('Digite o nome que você deseja cadastrar: ')).upper()
-                cpf = int(input('Digite o CPF do cliente que você desja adicionar: '))
-                quantidadeDigitosCpf = len(str(cpf))
+                valorComprado = int(input('Digite o valor comprado'))
+                dataCompra=str(input('Digite a data da compra'))
+                dataCompra=datetime.strptime(dataCompra, '%d/%m/%Y')
+                dataCOmpraFormatada = ("{}/{}/{}".format(dataCompra.day,dataCompra.month,dataCompra.year))
+                telefone = int(input('Digite o telefone do cliente que você desja adicionar: '))
+                quantidadeDigitosCpf = len(str(telefone))
                 if quantidadeDigitosCpf != 11:
                         print('Você digitou um CPF invalido')
                         print('Quantidade errada')
                 else:
                     print('Tem os 11')
-                    agenda.inserir(nome, cpf)
+                    agenda.inserir(nome, telefone, valorComprado, dataCompra)
                     break
 
         elif choice ==  3:
@@ -98,8 +110,8 @@ if __name__ == '__main__':
         elif choice ==  5:
             identidadeID = int(input('Digite a ID do cliente que você deseja alterar: '))
             nome = str(input('Digite o nome para que seja substituido na id: ')).upper()
-            cpf = int(input('Digite o CPF agora: '))
-            agenda.editar(nome, cpf , identidadeID)
+            telefone = int(input('Digite o CPF agora: '))
+            agenda.editar(nome, telefone , identidadeID)
 
         elif choice == 6:
             encerrar = True
